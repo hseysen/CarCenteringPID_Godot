@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://dwmtwy2gmd20p"]
+
+[ext_resource type="Texture2D" uid="uid://d0prybbb37lkm" path="res://assets/simple-travel-car-top_view.svg" id="1_6ul6i"]
+[ext_resource type="Script" path="res://scripts/car.gd" id="1_k82pj"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_0h01w"]
+radius = 28.0
+height = 126.0
+
+[node name="Car" type="CharacterBody2D"]
+script = ExtResource("1_k82pj")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.121849, 0.121849)
+texture = ExtResource("1_6ul6i")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+rotation = 1.5708
+shape = SubResource("CapsuleShape2D_0h01w")
+
+[node name="Camera2D" type="Camera2D" parent="."]

@@ -1,0 +1,111 @@
+[gd_scene load_steps=7 format=3 uid="uid://b17p72ybv5yfj"]
+
+[ext_resource type="PackedScene" uid="uid://c2qh2uysp1sl5" path="res://scenes/road_tile.tscn" id="1_id1hy"]
+[ext_resource type="PackedScene" uid="uid://dwmtwy2gmd20p" path="res://scenes/car.tscn" id="2_mvmxc"]
+[ext_resource type="Script" path="res://scripts/PID.gd" id="3_1cjp8"]
+[ext_resource type="Texture2D" uid="uid://d37giwb3jdidn" path="res://assets/background_button.png" id="4_5reti"]
+[ext_resource type="Texture2D" uid="uid://qyy75lhkmqlc" path="res://assets/background_button_pressed.png" id="5_7o4s7"]
+
+[sub_resource type="WorldBoundaryShape2D" id="WorldBoundaryShape2D_hhdcr"]
+distance = 2.0
+
+[node name="Simulation" type="Node2D"]
+
+[node name="RoadTile" parent="." node_paths=PackedStringArray("Player") instance=ExtResource("1_id1hy")]
+position = Vector2(640, 360)
+Player = NodePath("../Car")
+
+[node name="BoundaryTop" type="StaticBody2D" parent="RoadTile"]
+position = Vector2(-121, -352)
+rotation = 3.14159
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoadTile/BoundaryTop"]
+shape = SubResource("WorldBoundaryShape2D_hhdcr")
+
+[node name="BoundaryBot" type="StaticBody2D" parent="RoadTile"]
+position = Vector2(-14, 354)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoadTile/BoundaryBot"]
+shape = SubResource("WorldBoundaryShape2D_hhdcr")
+
+[node name="RoadTile2" parent="." node_paths=PackedStringArray("Player") instance=ExtResource("1_id1hy")]
+position = Vector2(2178, 360)
+Player = NodePath("../Car")
+
+[node name="BoundaryTop" type="StaticBody2D" parent="RoadTile2"]
+position = Vector2(-121, -352)
+rotation = 3.14159
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoadTile2/BoundaryTop"]
+shape = SubResource("WorldBoundaryShape2D_hhdcr")
+
+[node name="BoundaryBot" type="StaticBody2D" parent="RoadTile2"]
+position = Vector2(-14, 354)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="RoadTile2/BoundaryBot"]
+shape = SubResource("WorldBoundaryShape2D_hhdcr")
+
+[node name="BoundaryLeft" type="StaticBody2D" parent="."]
+position = Vector2(-8, 369)
+rotation = 1.56659
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="BoundaryLeft"]
+shape = SubResource("WorldBoundaryShape2D_hhdcr")
+
+[node name="Car" parent="." instance=ExtResource("2_mvmxc")]
+position = Vector2(481, 192)
+
+[node name="PID" type="Node" parent="." node_paths=PackedStringArray("Player")]
+script = ExtResource("3_1cjp8")
+Player = NodePath("../Car")
+setpoint = 360.0
+P = 1.0
+I = 0.012
+D = 0.19
+divider = 1000.0
+
+[node name="UI" type="CanvasLayer" parent="."]
+
+[node name="MarginContainer" type="MarginContainer" parent="UI"]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_override_constants/margin_left = 100
+theme_override_constants/margin_top = 200
+theme_override_constants/margin_right = 100
+theme_override_constants/margin_bottom = 200
+
+[node name="Control" type="Control" parent="UI/MarginContainer"]
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 8
+
+[node name="DisturbanceButton" type="TextureButton" parent="UI/MarginContainer/Control"]
+layout_mode = 1
+offset_top = 49.0
+offset_right = 400.0
+offset_bottom = 223.0
+scale = Vector2(0.446378, 0.439957)
+size_flags_horizontal = 4
+size_flags_vertical = 4
+texture_normal = ExtResource("4_5reti")
+texture_pressed = ExtResource("5_7o4s7")
+
+[node name="Label" type="Label" parent="UI/MarginContainer/Control"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 34.0
+offset_top = 73.0
+offset_right = 144.0
+offset_bottom = 96.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "DISTURBANCE"
+
+[connection signal="pressed" from="UI/MarginContainer/Control/DisturbanceButton" to="PID" method="_on_disturbance_button_pressed"]
